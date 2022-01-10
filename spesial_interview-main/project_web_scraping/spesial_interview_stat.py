@@ -97,25 +97,20 @@ if __name__ == "__main__":
             df.set_index('seqnum', inplace=True)
 
             #조건 선택
-            groupKeys = df.groupby('credate').size()
-
-            for index, keyCount in enumerate(groupKeys):
-                print(index, keyCount)
-            
-            print(groupKeys.columns[0])
-            
-            # for groupKey in groupKeys:
-            #     filt = keyList['credate'] == groupKey 
-            #     print(keyList[filt].count())
-
-            print("##############")
-            time.sleep(100)
-
-
             result = df[['credate', 'view_counts']]
-            result_fin=result.groupby('credate').sum()
+            print(result)
+            result_fin = result.groupby('credate').sum()
+            groupKeys = result['credate'].unique()
+            for sumVal in result_fin:
+                print(sumVal)
+            groupSums = [sumVal for sumVal in result_fin]
+            
 
-            print(result_fin)
+            
+            
+            print(groupKeys)
+            print(groupSums)
+
 
 
 
@@ -140,8 +135,8 @@ if __name__ == "__main__":
             # plt.plot(result['credate'], result['view_counts'])
             # plt.show()
 
+            time.sleep(1000)
 
-            time.sleep(10000)
     except:
         disconnect_stat_db()
 
