@@ -1,16 +1,4 @@
-import re
-import requests
-import random
 import time
-import pickle
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from bs4 import BeautifulSoup
-from gtts import gTTS
-import vlc
-from mutagen.mp3 import MP3
 import pymysql
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -70,7 +58,7 @@ def select_stat_info():
                 replace( subject, '화', '') as subject, score_count, \
                 heart_count, comment_count, view_count \
                 FROM \
-                spesial_interview_tb \
+                spesial_interview_stat_tb \
                 ORDER BY create_date;"
     mycursor.execute(sql)
 
@@ -78,39 +66,6 @@ def select_stat_info():
     rows = mycursor.fetchall()
     mydb.commit()
     return rows
-
-def print_menu():
-    print( "1 :   분 단위 회차 별 리포트" )
-    print( "2 :   분 단위 전체    리포트" )
-    print( "3 : 10분 단위 회차 별 리포트" )
-    print( "4 : 10분 단위 전체    리포트" )
-    print( "5 : 시간 단위 회차 별 리포트" )
-    print( "6 : 시간 단위 전체    리포트" )
-    print( "" )
-    print( "++++++++++++++++++++++++++++" )
-    print( "번호를 입력하세요" )
-    print( "++++++++++++++++++++++++++++" )
-
-    return input()
-
-
-def get_select_condition(choice_menu):
-    if choice_menu == 1:
-        pass
-    elif choice_menu == 1:
-        pass
-    elif choice_menu == 1:
-        pass
-    elif choice_menu == 1:
-        pass
-    elif choice_menu == 1:
-        pass
-    elif choice_menu == 1:
-        pass
-    else:
-        pass
-
-
 
 
 if __name__ == "__main__":
@@ -141,24 +96,49 @@ if __name__ == "__main__":
             df.reset_index(drop=True, inplace=True)
             df.set_index('seqnum', inplace=True)
 
-            print(df)
-
             #조건 선택
-            # df['credate'] = df['credate'].str.slice(start=6, stop=11)
-            # result = df[['credate', 'view_counts']]
-            # # result_fin=result.groupby('credate')['view_counts'].sum()
-            # result_fin=result.groupby('credate').sum()
-            # print(result_fin['view_counts'])
-            # # plt.plot(result_fin['credate'], result_fin['view_counts'])
+            groupKeys = df.groupby('credate').size()
+
+            for index, keyCount in enumerate(groupKeys):
+                print(index, keyCount)
+            
+            print(groupKeys.columns[0])
+            
+            # for groupKey in groupKeys:
+            #     filt = keyList['credate'] == groupKey 
+            #     print(keyList[filt].count())
+
+            print("##############")
+            time.sleep(100)
+
+
+            result = df[['credate', 'view_counts']]
+            result_fin=result.groupby('credate').sum()
+
+            print(result_fin)
+
+
+
+
+            # print(result.groupby('credate').count)
+
             # plt.plot(result_fin)
             # plt.show()
 
+            # df['credate'] = df['credate'].str.slice(start=6, stop=11)
+            # result = df[['credate', 'view_counts']]
+            # result_fin=result.groupby('credate')['view_counts'].sum()
+            # result_fin=result.groupby('credate').sum()
+            # print(result_fin['view_counts'])
+            # plt.plot(result_fin['credate'], result_fin['view_counts'])
+            # plt.plot(result_fin)
+            # plt.show()
 
             # filt = (df['subjects'] == '105')
-            result=df.loc[(df['subjects'] == '105'), ['credate','view_counts']]
-            result['credate'] = result['credate'].str.slice(start=6, stop=11)
-            plt.plot(result['credate'], result['view_counts'])
-            plt.show()
+            # result=df.loc[(df['subjects'] == '105'), ['credate','view_counts']]
+            # result['credate'] = result['credate'].str.slice(start=6, stop=11)
+            # plt.plot(result['credate'], result['view_counts'])
+            # plt.show()
 
 
             time.sleep(10000)

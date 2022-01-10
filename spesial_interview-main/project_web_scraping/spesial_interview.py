@@ -8,11 +8,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
-from gtts import gTTS
-import vlc
-from mutagen.mp3 import MP3
+# from gtts import gTTS
+# import vlc
+# from mutagen.mp3 import MP3
 import pymysql
-
+import datetime
 
 
 # DB 생성정보
@@ -38,10 +38,13 @@ import pymysql
 # ALTER TABLE spesial_interview_tb ADD INDEX IDX_s_i_tb_1(create_date ASC);
 # ALTER TABLE spesial_interview_tb ADD INDEX IDX_s_i_tb_2(subject ASC);
 
+
 global mydb
 global mycursor
 global browser
 global view_count_list
+global currdate
+
 
 def connect_stat_db():
     global mydb
@@ -88,7 +91,6 @@ def scrape_special_interview_view_count():
         browser.get(url) # url 로 이동
         time.sleep(1)
 
-
         soup = BeautifulSoup(browser.page_source, "lxml")
 
         novel_list_elements = soup.find("ul", attrs={"class":"list_type2 v3 league_num NE=a:lst"}).find_all("li", attrs={"class":"volumeComment"})
@@ -121,11 +123,12 @@ def insert_chang_stat_info(stat_in_db):
 def insert_curr_stat_info(stat_in_db):
     global mydb
     global mycursor
+    global currdate
     
     sql = "INSERT INTO spesial_interview_stat_tb \
-        (subject, score_average, score_count, heart_count, comment_count, view_count) \
-            VALUES (%s, %s, %s, %s, %s, %s)"
-    val = (stat_in_db[0], stat_in_db[1], stat_in_db[2], stat_in_db[3], stat_in_db[4], stat_in_db[5])
+        (create_date, subject, score_average, score_count, heart_count, comment_count, view_count) \
+            VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    val = (currdate, stat_in_db[0], stat_in_db[1], stat_in_db[2], stat_in_db[3], stat_in_db[4], stat_in_db[5])
 
     mycursor.execute(sql, val)
     mydb.commit()
@@ -240,11 +243,8 @@ def scrape_special_interview():
     browser.get(url) # url 로 이동
     browser.find_element(By.XPATH, "//*[@id='volume1']/a").click()
 
-
-    with open('C:/PythonWorkSpace/project_web_scraping/spesial_interview_old.pickle', 'rb') as rf:
+    with open('C:/PythonWorkSpace/spesial_interview/spesial_interview_old.pickle', 'rb') as rf:
         old_total_info = pickle.load(rf)
-
-    # print_contents_info(old_total_info)
 
     total_info=[] # 전체 정보를 저장할 변수
 
@@ -270,27 +270,25 @@ def scrape_special_interview():
             # 정보 일괄 취합
             single_info=[subject, score_average, score_count, heart_count, view_count, comment_info]
             total_info.append(single_info)
-            # print()
-            # print()
-            # print(subject)
-            check_old_total_info = len(old_total_info)
+
             if check_index < len(old_total_info):
                 check_change_info(old_total_info[check_index], single_info)
             else:
                 print(subject, "는 신규 작품이므로 이후부터 체크됩니다.")
-            
+
             check_index = check_index + 1
 
             if stop_subject == subject:
                 print('마지막화 입니다. 종료합니다.')
                 
-                with open('C:/PythonWorkSpace/project_web_scraping/spesial_interview_old.pickle', 'wb') as fw:
+                with open('C:/PythonWorkSpace/spesial_interview/spesial_interview_old.pickle', 'wb') as fw:
                     pickle.dump(total_info, fw)
                 break
 
             next_part = browser.find_element(By.XPATH, "//*[@id='nextVolumeBtn']").click()
 
-        except:
+        except Exception as err:
+            print(err)
             break
 
 
@@ -299,13 +297,16 @@ if __name__ == "__main__":
     
     try:
         while True:
+            now = datetime.datetime.now()
+            currdate = now.strftime('%Y-%m-%d %H:%M:%S')
             init_webdriver()
             scrape_special_interview_view_count()
             scrape_special_interview()
             clear_webdriver()
             voice_notice='''전 작품 체크가 끝났습니다.'''
             print(voice_notice)
-    except:
+    except Exception as err:
+        print(err)
         disconnect_stat_db()
 
 
