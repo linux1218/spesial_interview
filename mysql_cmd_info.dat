@@ -1,0 +1,1405 @@
+mysql -u root -p --port=3306
+
+Smgrl123&
+
+
+
+접속
+mysql -uusmda -pusmda1234
+
+
+mysql -uroot -psmgrl123&
+
+mysql -u root -p
+
+root 접속 방법
+mysql -u root -p
+Smgrl123&
+
+
+
+데이터베이스 확인
+mysql> SHOW DATABASES;
+
+
+데이터베이스 이동
+mysql> USE emda;
+
+
+root 접속 정보
+mysql -uroot -pnew1234!
+
+select host, user from user;
+root 접속 후 user 사용자 확인
+use mysql
+select * from user; 
+show grants for 'ra7'@'%';
+
+
+데이터베이스 생성
+CREATE DATABASE emda;
+CREATE DATABASE smda;
+
+
+CREATE DATABASE cloud_ca;
+CREATE DATABASE cloud_ra;
+
+
+user, 사용자 생성
+INSERT INTO user(HOST, USER, PASSWORD) VALUES ( 'localhost', 'usmda', password('usmda1234'));
+
+user, 사용자에 database 접근 권한 부여 할당
+GRANT ALL PRIVILEGES ON smda.* TO usmda@localhost IDENTIFIED BY 'usmda1234';
+
+
+쿼리 후 적용인듯
+mysql> FLUSH privileges;
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+database dump export 방법
+mysqldump -uusmda  -p smda > smda_dump.sql
+
+mysqldump -uusmda  -p emda > emda_dump.sql
+
+
+
+database dump import 방법
+mysql -uusmda -p smda <  /home/sms4/smda_dump.sql
+
+mysql -uusmda -p emda <  /home/sms4/emda_dump.sql
+
+
+
+
+
+
+mysql -u root -p --port=3306
+
+
+
+
+
+
+
+
+
+현재 SMDA에 할당되어 있는 파티셔별(PT_yyyymmdd만 ) 크기  
+
+	SELECT PARTITION_NAME "PARTITION Name",
+
+	SUM(data_length + index_length ) / 1024 / 1024 "Data Base Size in MB" 
+
+	FROM INFORMATION_SCHEMA.PARTITIONS	
+
+	WHERE TABLE_SCHEMA = 'smda' AND PARTITION_NAME LIKE 'PT_%'
+
+	GROUP BY PARTITION_NAME;
+
+
+
+
+현재 각 DB별  사용 공간 및 여유 공간 
+
+
+
+
+	SELECT TABLE_SCHEMA "Data Base Name", 
+
+	SUM( DATA_LENGTH + INDEX_LENGTH ) / 1024 / 1024 "Data Base Size in MB", 
+
+	SUM( DATA_FREE )/ 1024 / 1024 "Free Space in MB" 
+
+	FROM INFORMATION_SCHEMA.TABLES 
+
+	GROUP BY TABLE_SCHEMA;
+	
+	
+
+
+
+delete from INFRA_REPORT;
+delete from I_AUTH_REQUEST;
+delete from I_AUTH_RESPONSE;
+delete from I_IMI_CDELIVER;
+delete from I_IMI_DELIVER;
+delete from I_IMI_REPORT;
+delete from I_MMS_DELIVER;
+delete from I_MMS_REPORT;
+delete from I_NPE_REPORT;
+delete from I_NPE_SUBMIT;
+delete from I_SMCI_DELIVER;
+delete from I_SMCI_REPORT;
+delete from I_SMCI_SUBMIT;
+delete from I_SMCI_TREPORT;
+delete from I_SMCI_TSUBMIT;
+delete from MMS_MTCDR;
+delete from MP_DELIVER;
+delete from MP_PEER;
+delete from MP_REPORT;
+delete from MP_SUBMIT;
+delete from M_CAPRI_REQUEST;
+delete from M_CAPRI_RESPONSE;
+delete from M_NPE_REPORT;
+delete from M_NPE_SUBMIT;
+delete from M_SMCI_DELIVER;
+delete from M_SMCI_REPORT;
+delete from M_SMCI_SUBMIT;
+delete from M_W2P_DELIVER;
+delete from M_W2P_REPORT;
+delete from T_NPE_REPORT;
+delete from T_NPE_SUBMIT;
+delete from T_SMCI_DELIVER;
+delete from T_SMCI_DELIVER_ACK;
+delete from T_SMCI_REPORT;
+delete from T_SMCI_SUBMIT;
+delete from T_SMCI_TREPORT;
+delete from T_SMCI_TSUBMIT;
+delete from T_TSI_DELIVER;
+delete from T_TSI_REPORT;
+
+
+	
+	
+	
+	
+select * from INFRA_REPORT;
+select * from I_AUTH_REQUEST;
+select * from I_AUTH_RESPONSE;
+select * from I_IMI_CDELIVER;
+select * from I_IMI_DELIVER;
+select * from I_IMI_REPORT;
+select * from I_MMS_DELIVER;
+select * from I_MMS_REPORT;
+select * from I_NPE_REPORT;
+select * from I_NPE_SUBMIT;
+select * from I_SMCI_DELIVER;
+select * from I_SMCI_REPORT;
+select * from I_SMCI_SUBMIT;
+select * from I_SMCI_TREPORT;
+select * from I_SMCI_TSUBMIT;
+select * from MMS_MTCDR;
+select * from MP_DELIVER;
+select * from MP_PEER;
+select * from MP_REPORT;
+select * from MP_SUBMIT;
+select * from M_CAPRI_REQUEST;
+select * from M_CAPRI_RESPONSE;
+select * from M_NPE_REPORT;
+select * from M_NPE_SUBMIT;
+select * from M_SMCI_DELIVER;
+select * from M_SMCI_REPORT;
+select * from M_SMCI_SUBMIT;
+select * from M_W2P_DELIVER;
+select * from M_W2P_REPORT;
+select * from T_NPE_REPORT;
+select * from T_NPE_SUBMIT;
+select * from T_SMCI_DELIVER;
+select * from T_SMCI_DELIVER_ACK;
+select * from T_SMCI_REPORT;
+select * from T_SMCI_SUBMIT;
+select * from T_SMCI_TREPORT;
+select * from T_SMCI_TSUBMIT;
+select * from T_TSI_DELIVER;
+select * from T_TSI_REPORT;
+
+
+
+
+
+
+
+특정 테이블에 파티션 확인
+select table_schema, table_name, partition_name, partition_ordinal_position, table_rows
+from  information_schema.partitions
+where table_name = 'INFRA_REPORT';
+
+
+
+
+
+
+
+
+
+
+delete from info;
+
+delete from gd_ldap_info;
+
+
+
+select serial , issuer  , userid   ,idnum     ,oid       ,expired   ,registerd from info;
+ 
+
+select * from gd_ldap_info;
+  
+  
+ 
+
+
+
+
+
+
+172.20.26.23
+TB_SID=INICA
+Listener port = 8631
+
+
+172.20.25.194  tibero/tibero
+TB_SID=INIRA
+Listener port = 8632
+
+
+root/smgrl123
+
+useradd -d /home/tibero6_client -g dba tibero6_client
+password tibero6_client
+
+gnzip 파일명
+
+
+
+
+export TB_HOME=/home/tibero6_client/tibero6
+export TB_SID=tb6
+export PATH=$TB_HOME/bin:$TB_HOME/client/bin:$PATH
+export LD_LIBRARY_PATH=$TB_HOME/client/lib:$LD_LIBRARY_PATH
+
+password
+
+
+
+mysql -u ra7 -p ra7 -S /var/lib/mysql/mysql.sock
+mysql -u ra7 -p --port 13306 --host 127.0.0.1
+
+mysql -u ra7 -p ra7 -S /var/lib/mysql/mysql.sock
+"Ra20191204&"
+PORT : 13306
+
+
+
+211.219.156.139 (unixdev)
+source ~/.tcshrc.jhkimtest64
+
+/home1/UnixDev/BIN/OPPRA
+
+[티베로 설치된곳]
+1)
+172.20.25.194  tibero/tibero
+TB_SID=INIRA
+Listener port = 8632
+
+2)
+172.20.26.23
+TB_SID=INICA
+Listener port = 8631
+
+
+connect ra7@INIRA  
+Enter Password: ra710
+
+connect ca7@INICA  
+Enter Password: ca710
+
+
+
+mysql 개발
+/home/unixdev/hyj/ra_c_7.3.0/lib/dbms
+
+
+
+./pkcs10_IssueCert 0 08 71
+
+
+
+3번 장비
+. ~/.bashrc.tb64
+
+
+. ~/.bashrc.hyjtest64
+
+
+
+
+mysql -uroot -psmgrl123
+
+
+
+mysql -u ra7 -p ra7 
+Ra20191204&
+
+LOCK TABLES
+ 
+mysql> revoke LOCK TABLES on ra7.* from ra7;
+
+
+
+grant all privileges on ra7.* to 'ra7';
+
+
+show grants for 'ra7'@'%';
+
+
+FLUSH PRIVILEGES
+
+
+
+
+
+
+IP PORT 접속 방법
+mysql -u ra7 -p ra7 --port 3306 --host 172.20.26.33
+Ra20191204&
+
+.sock 파일로 접속 방법
+mysql -u ra7 -p ra7 
+Ra20191204&
+  
+root 접속 방법
+mysql -u root -p
+Smgrl123&
+
+모든 IP 접속 다 수용하는 방법
+grant all privileges on *.* to ra7@'%' identified by'Ra20191204&';
+
+mysql 창에서 적용
+FLUSH PRIVILEGES;
+
+
+
+
+
+
+
+
+
+
+
+
+set_isolation_readcommit
+
+
+
+SetDBMSIsolation
+
+
+READ-COMMITTED
+
+
+create table test_no(
+	`testno` int(11) NOT NULL,
+	`teststr` varchar(100) NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+INSERT INTO test_no ( testno, teststr ) values (1111, 'abcd');
+
+
+
+SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
+
+http://labs.brandi.co.kr/2019/06/19/hansj.html
+
+
+
+mysql>  SELECT @@AUTOCOMMIT;
++--------------+
+| @@AUTOCOMMIT |
++--------------+
+|            1 | 
++--------------+
+1 row in set (0.00 sec)
+
+mysql> SET AUTOCOMMIT=FALSE;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>  SELECT @@AUTOCOMMIT;
++--------------+
+| @@AUTOCOMMIT |
++--------------+
+|            0 | 
++--------------+
+1 row in set (0.00 sec)
+
+mysql> 
+
+
+
+REPEATABLE-READ
+
+mysql> SHOW VARIABLES WHERE VARIABLE_NAME='tx_isolation';
++---------------+-----------------+
+
+
+
+
+INSERT INTO test_no ( testno, teststr ) values (1414, 'abcd');
+
+
+
+IP PORT 접속 방법
+mysql -u ra7 -p ra7 --port 3306 --host 172.20.26.33
+Ra20191204&
+
+su - root
+
+
+## session1
+begin;
+select * from test_no;
+select * from test_no limit 10;
+
+## session2
+alter table test_no add key ix_te(testno);
+alter table test_no add key ix_te2(testno,teststr);
+
+## session3
+show processlist; <= 이 상태 확인 부탁드립니다.
+
+
+alter table tongji_idx add key ix_t(tecol);
+
+INSERT INTO test_no (testno, teststr) VALUES ( 22, '22i' );
+   
+   
+mysql> desc test_no;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| testno  | int(11)      | NO   |     | NULL    |       | 
+| teststr | varchar(100) | NO   |     | NULL    |       | 
++---------+--------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+
+sudop mysql_upgrade -uroot -p --force
+
+transaction-isolation = READ-COMMITTED
+
+
+SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
+
+select get_db_sequence( '%s', '%s');
+SHOW FULL PROCESSLIST  
+
+mysql> show full processlist;
++----+-------------+--------------------+------+---------+------+---------------------------------+----------------------------------------------------+----------+
+| Id | User        | Host               | db   | Command | Time | State                           | Info                                               | Progress |
++----+-------------+--------------------+------+---------+------+---------------------------------+----------------------------------------------------+----------+
+|  3 | system user |                    | NULL | Daemon  | NULL | InnoDB purge worker             | NULL                                               |    0.000 | 
+|  1 | system user |                    | NULL | Daemon  | NULL | InnoDB purge coordinator        | NULL                                               |    0.000 | 
+|  4 | system user |                    | NULL | Daemon  | NULL | InnoDB purge worker             | NULL                                               |    0.000 | 
+|  2 | system user |                    | NULL | Daemon  | NULL | InnoDB purge worker             | NULL                                               |    0.000 | 
+|  5 | system user |                    | NULL | Daemon  | NULL | InnoDB shutdown handler         | NULL                                               |    0.000 | 
+|  8 | ra7         | 172.20.26.23:19651 | ra7  | Sleep   |    2 |                                 | NULL                                               |    0.000 | 
+|  9 | ra7         | 172.20.26.23:19652 | ra7  | Sleep   |    7 |                                 | NULL                                               |    0.000 | 
+| 11 | ra7         | 172.20.26.23:19657 | ra7  | Sleep   |    8 |                                 | NULL                                               |    0.000 | 
+| 12 | ra7         | 172.20.26.23:19659 | ra7  | Sleep   |   16 |                                 | NULL                                               |    0.000 | 
+| 13 | ra7         | 172.20.26.23:19661 | ra7  | Sleep   |  345 |                                 | NULL                                               |    0.000 | 
+| 14 | ra7         | 172.20.26.23:19663 | ra7  | Query   |  334 | Waiting for table metadata lock | alter table test_no add key ix_te2(testno,teststr) |    0.000 | 
+| 15 | ra7         | 172.20.26.23:19667 | ra7  | Query   |    0 | init                            | show full processlist                              |    0.000 | 
++----+-------------+--------------------+------+---------+------+---------------------------------+----------------------------------------------------+----------+
+12 rows in set (0.00 sec)
+
+mysql> show full processlist;
++----+-------------+--------------------+------+---------+------+--------------------------+-----------------------+----------+
+| Id | User        | Host               | db   | Command | Time | State                    | Info                  | Progress |
++----+-------------+--------------------+------+---------+------+--------------------------+-----------------------+----------+
+|  3 | system user |                    | NULL | Daemon  | NULL | InnoDB purge worker      | NULL                  |    0.000 | 
+|  1 | system user |                    | NULL | Daemon  | NULL | InnoDB purge coordinator | NULL                  |    0.000 | 
+|  4 | system user |                    | NULL | Daemon  | NULL | InnoDB purge worker      | NULL                  |    0.000 | 
+|  2 | system user |                    | NULL | Daemon  | NULL | InnoDB purge worker      | NULL                  |    0.000 | 
+|  5 | system user |                    | NULL | Daemon  | NULL | InnoDB shutdown handler  | NULL                  |    0.000 | 
+|  8 | ra7         | 172.20.26.23:19651 | ra7  | Sleep   |    0 |                          | NULL                  |    0.000 | 
+|  9 | ra7         | 172.20.26.23:19652 | ra7  | Sleep   |    7 |                          | NULL                  |    0.000 | 
+| 11 | ra7         | 172.20.26.23:19657 | ra7  | Sleep   |    4 |                          | NULL                  |    0.000 | 
+| 12 | ra7         | 172.20.26.23:19659 | ra7  | Sleep   |   16 |                          | NULL                  |    0.000 | 
+| 13 | ra7         | 172.20.26.23:19661 | ra7  | Sleep   |    6 |                          | NULL                  |    0.000 | 
+| 14 | ra7         | 172.20.26.23:19663 | ra7  | Sleep   |    6 |                          | NULL                  |    0.000 | 
+| 15 | ra7         | 172.20.26.23:19667 | ra7  | Query   |    0 | init                     | show full processlist |    0.000 | 
++----+-------------+--------------------+------+---------+------+--------------------------+-----------------------+----------+
+
+
+
+
+
+'root'@'localhost'
+'root'@'localhost';
+
+
+MYSQL LOCK 이 존재하는지 확인하는 방법
+install soname 'metadata_lock_info'; 
+select * from information_schema.metadata_lock_info; 
+select * FROM information_schema.INNODB_LOCKS;
+select * FROM information_schema.INNODB_TRX;
+
+
+
+
+
+
+
+
+SHOW FULL PROCESSLIST  ; 로 나온 결과를 가지고
+아래 쿼리에 id 부분만 값을 바꿔주면 가능
+
+<root 필요>
+SELECT esc.THREAD_ID, t.processlist_id, esc.SQL_TEXT 
+FROM 
+performance_schema.events_statements_current esc JOIN performance_schema.threads t ON t.thread_id = esc.thread_id 
+WHERE t.processlist_id = 68508;
+
+
+프로세스 리스트로 한번에 찾아내는 방법
+
+SELECT esc.THREAD_ID, t.processlist_id, esc.SQL_TEXT 
+FROM INFORMATION_SCHEMA.PROCESSLIST prclist,
+performance_schema.events_statements_current esc JOIN performance_schema.threads t ON t.thread_id = esc.thread_id 
+WHERE 
+prclist.USER='cho_ca' AND
+t.processlist_id = prclist.ID;
+
+
+
+
+
+
+
+
+root 접속 방법
+mysql -u ra7 -p ra7 --port 3306 --host 172.20.26.33
+Ra20191204&
+
+mysql -u root -p
+Smgrl123&
+
+
+mysql -u ra7 -p ra7 --port 3306
+Ra20191204&
+
+
+sudo mysql_upgrade -u root -pSmgrl123& --force
+
+
+mysql_upgrade -u root -p --force
+
+show function status where db = 'ra7';
+
+
+
+
+
+사용자 추가 (권한추가)
+mysql > 
+create user 'ca7';
+
+create user 'cloud_ca';
+
+create user 'cloud_ra';
+
+mysql > create user cloud_ca@localhost identified by 'Ra20191204&';
+
+create user cloud_ca@localhost identified by 'Ra20191204&';
+
+create user cloud_ra@localhost identified by 'Ra20191204&';
+
+
+
+// 사용자(user)를 추가하면서 패스워드까지 설정
+
+기존에 사용하던 계정에 외부 접근 권한을 부여하려면, Host를 '%' 로 하여 똑같은 계정을 추가한다
+
+mysql > create user 'ca7'@'%' identified by 'Ra20191204&';  // '%' 의 의미는 외부에서의 접근을 허용
+
+drop user 'ca7'@localhost;    // 사용자 삭제
+
+
+msyql > create schema ca7 default character set utf8;
+
+mysql > create database ca7 default character set utf8;
+
+
+create schema cloud_ca_db default character set utf8;
+create database cloud_ca_db default character set utf8;
+
+create schema cloud_ra_db default character set utf8;
+create database cloud_ra_db default character set utf8;
+
+drop database cloud_ca;
+
+drop database cloud_ocsp;
+drop database cloud_ocsp;
+
+grant all privileges on DB명.* to userid@'%' identified by '비밀번호' ; 
+
+grant all privileges on cloud_ca_db.* to cloud_ca@'%' identified by 'Ra20191204&'; 
+grant all privileges on cloud_ra_db.* to cloud_ra@'%' identified by 'Ra20191204&'; 
+
+
+GRANT ALL privileges ON cloud_ca.* TO ca7@locahost identified by 'Ra20191204&'; 
+GRANT ALL privileges ON cloud_ca.* TO ca7@'%' identified by 'Ra20191204&'; 
+
+
+GRANT ALL privileges ON cloud_ca.* TO cloud_ca_db@locahost identified by 'Ra20191204&'; 
+
+GRANT ALL privileges ON cloud_ca.* TO cloud_ca_db@'%' identified by 'Ra20191204&'; 
+
+
+
+GRANT ALL privileges ON cloud_ra.* TO cloud_ra_db@locahost identified by 'Ra20191204&'; 
+
+GRANT ALL privileges ON cloud_ra.* TO cloud_ra_db@'%' identified by 'Ra20191204&'; 
+
+
+grant all privileges on *.* to ra7@'%' identified by'Ra20191204&';
+
+mysql > grant all privileges on ca7.* to ca7@'%' identified by 'Ra20191204&' ;  //모든 원격지에서 접속 권한 추가 
+host에 '200.100.%' 로 하면 IP주소가 200.100.X.X 로 시작되는 모든 IP에서 원격 접속을 허용한다는 의미
+host에 '200.100.100.50' 으로 하면 IP주소가 200.100.100.50 인 곳에서만 원격 접속을 허용한다는 의미
+
+mysql > grant all privileges on ca7.* to ca7@localhost identified by 'Ra20191204&';
+// user 에게 ca7 데이터베이스 모든 테이블에 대한 권한 부여 
+
+mysql> grant select, insert, update on ca7.* to user@localhost identified by 'Ra20191204&';
+// user 에게 ca7 데이터베이스 모든 테이블에 select, insert, update 권한 부여
+
+
+mysql> grant select, insert, update on ca7.* to user@localhost;   -- 패스워드는 변경없이 권한만 부여하는 경우
+// user 에게 ca7 데이터베이스 모든 테이블에 select, insert, update 권한 부여
+
+
+mysql> grant all privileges on *.* to user@localhost identified by 'Ra20191204&' with grant option;
+// user 에게 모든 데이터베이스 모든 테이블에 권한 부여
+// 전역 권한은 모두 광범위한 보안문제가 수반되므로 권한을 허용하는 경우 신중해야 함
+
+
+mysql > flush privileges;     // 변경된 내용을 메모리에 반영(권한 적용)
+
+
+사용자에게 부여된 권한 확인
+
+mysql > SHOW GRANTS FOR cloud_ca@localhost;
+mysql > SHOW GRANTS FOR cloud_ca@'%';
+mysql > SHOW GRANTS FOR test@'200.100.100.50';
+
+
+사용자에게 데이터베이스 사용권한 제거
+revoke all on DB명.테이블명 from 사용자ID;     // 모든 권한을 삭제
+
+
+
+
+
+
+로그파일 생성
+mysql> show variables like 'general%';
++------------------+----------------------------+
+| Variable_name    | Value                      |
++------------------+----------------------------+
+| general_log      | OFF                        | 
+| general_log_file | /var/lib/mysql/AGtest1.log | 
++------------------+----------------------------+
+2 rows in set (0.00 sec)
+
+
+로그파일 on / off
+mysql>  set global general_log=on;
+Query OK, 0 rows affected (0.00 sec)
+
+로그파일 변경
+my.cnf 변경해야함
+touch /var/lib/mysql/transaction.log
+#로그 위치변경
+mysql> set global slow_query_log_file = '/var/log/mysql/slow-mysql.log';
+Query OK, 0 rows affected (0.00 sec)
+
+
+트렌잭션 확인 트랜젝션 트랜잭션 트렌젝션
+mysql> select * FROM information_schema.INNODB_TRX;
+
+
+
+
+
+slow_query_log
+#long_query_time 확인
+mysql> show variables like 'long_query%';
++-----------------+-----------+
+| Variable_name   | Value     |
++-----------------+-----------+
+| long_query_time | 10.000000 |
++-----------------+-----------+
+1 row in set (0.00 sec)
+#slow_query_log 확인
+mysql> show variables like 'slow%';
++---------------------+-----------------------------------+
+| Variable_name       | Value                             |
++---------------------+-----------------------------------+
+| slow_launch_time    | 2                                 |
+| slow_query_log      | OFF                               |
+| slow_query_log_file | /var/lib/mysql/localhost-slow.log |
++---------------------+-----------------------------------+
+3 rows in set (0.00 sec)
+
+
+SET LINESIZE 200
+
+
+mysql -u bs_fin_root -p bs_fin_ca_root --port 3306 --host 172.20.26.33
+
+
+alter table [테이블명] drop foreign key [제약조건명];
+
+
+
+
+
+mysql -u cho_ca -p cho_ca_db --port 3306 --host 172.20.26.33
+
+
+
+mysql -u cho_ca -p cho_ca_db --port 3306 --host 172.20.26.33
+
+mysql -u cho_ra -p cho_ra_db --port 3306 --host 172.20.26.33
+
+
+
+mysql -u bs_fin_root -p bs_fin_ca_root --port 3306 --host 172.20.26.33
+
+mysql -u bs_fin_ca -p bs_fin_ca_db --port 3306 --host 172.20.26.33
+pkg_ca
+
+0. TOSS 설치
+
+1. 장비셋팅
+useradd -d /SW/cho_ROOT cho_root
+passwd cho_root
+Dlswmd@1025
+
+useradd -d /SW/cho_CA cho_ca
+passwd cho_ca
+Dlswmd@1025
+
+useradd -d /SW/cho_RA cho_ra
+passwd cho_ra
+Dlswmd@1025
+
+useradd -d /SW/cho_OCSP cho_ocsp
+passwd cho_ocsp
+Dlswmd@1025
+
+2. DB 셋팅
+
+[root@mysqlserver ~]# mysql -u root -p --port=3306
+Enter password: Smgrl123&
+
+
+[root@mysqlserver ~]# mysql -u cho_ca -p --port=3306
+Enter password: Qwer1234!
+
+
+SHOW GRANTS cho_ca
+
+create user cho_root@localhost identified by 'Qwer1234!';
+create user cho_root@'%' identified by 'Qwer1234!';
+create database cho_root_db default character set utf8;
+grant all privileges on cho_root_db.* to 'cho_root'@'%' identified by 'Qwer1234!';
+
+create user cho_ca@localhost identified by 'Qwer1234!';
+create user cho_ca@'%' identified by 'Qwer1234!';
+create database cho_ca_db default character set utf8;
+grant all privileges on cho_ca_db.* to 'cho_ca'@'%' identified by 'Qwer1234!';
+
+create user cho_ra@localhost identified by 'Qwer1234!';
+create user cho_ra@'%' identified by 'Qwer1234!';
+create database cho_ra_db default character set utf8;
+grant all privileges on cho_ra_db.* to 'cho_ra'@'%' identified by 'Qwer1234!';
+
+create user cho_ocsp@localhost identified by 'Qwer1234!';
+create user cho_ocsp@'%' identified by 'Qwer1234!';
+create database cho_ocsp_db default character set utf8;
+grant all privileges on cho_ocsp_db.* to 'cho_ocsp'@'%' identified by 'Qwer1234!';
+
+FLUSH PRIVILEGES;
+
+
+
+
+
+
+
+
+
+
+
+
+
+DROP DATABASE bs_fin_root_db;
+
+DROP DATABASE bs_fin_ca_db;
+
+DROP DATABASE bs_fin_ra_db;
+
+DROP DATABASE bs_fin_ocsp_db;
+
+
+
+DROP DATABASE ts_fin_root_db;
+
+DROP DATABASE ts_fin_ca_db;
+
+DROP DATABASE ts_fin_ra_db;
+
+DROP DATABASE ts_fin_ocsp_db;
+
+
+DELETE, INSERT, SELECT, UPDATE
+
+DROP USER bs_fin_root;
+
+
+
+create user bs_fin_root@localhost identified by 'Qwer1234!';
+create user bs_fin_root@'%' identified by 'Qwer1234!';
+create database bs_fin_root_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE  on bs_fin_root_db.* to 'bs_fin_root'@'%' identified by 'Qwer1234!';
+
+create user bs_fin_ca@localhost identified by 'Qwer1234!';
+create user bs_fin_ca@'%' identified by 'Qwer1234!';
+create database bs_fin_ca_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE  on bs_fin_ca_db.* to 'bs_fin_ca'@'%' identified by 'Qwer1234!';
+
+create user bs_fin_ra@localhost identified by 'Qwer1234!';
+create user bs_fin_ra@'%' identified by 'Qwer1234!';
+create database bs_fin_ra_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE  on bs_fin_ra_db.* to 'bs_fin_ra'@'%' identified by 'Qwer1234!';
+
+create user bs_fin_ocsp@localhost identified by 'Qwer1234!';
+create user bs_fin_ocsp@'%' identified by 'Qwer1234!';
+create database bs_fin_ocsp_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE  on bs_fin_ocsp_db.* to 'bs_fin_ocsp'@'%' identified by 'Qwer1234!';
+
+FLUSH PRIVILEGES;
+
+
+
+
+
+
+drop user bs_fin_root@localhost;
+
+drop user bs_fin_ca@localhost;
+drop user bs_fin_ra@localhost;
+drop user bs_fin_ocsp@localhost;
+
+drop user ts_fin_root@localhost;
+drop user ts_fin_ca@localhost;
+drop user ts_fin_ra@localhost;
+drop user ts_fin_ocsp@localhost;
+
+
+drop user cho_ra;
+drop user cho_ra@localhost;
+
+create user cho_ra@localhost identified by 'Qwer1234!';
+create user cho_ra@'%' identified by 'Qwer1234!';
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on cho_ra_db.* to 'cho_ra'@'%' identified by 'Qwer1234!';
+
+
+grant  all privileges on bs_fin_ocsp_db.* to 'bs_fin_ocsp'@'%' identified by 'Qwer1234!';
+
+all privileges
+
+create user bs_fin_root@localhost identified by 'Qwer1234!';
+create user bs_fin_root@'%' identified by 'Qwer1234!';
+create database bs_fin_root_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on bs_fin_root_db.* to 'bs_fin_root'@'%' identified by 'Qwer1234!';
+
+create user bs_fin_ca@localhost identified by 'Qwer1234!';
+create user bs_fin_ca@'%' identified by 'Qwer1234!';
+create database bs_fin_ca_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on bs_fin_ca_db.* to 'bs_fin_ca'@'%' identified by 'Qwer1234!';
+
+create user bs_fin_ra@localhost identified by 'Qwer1234!';
+create user bs_fin_ra@'%' identified by 'Qwer1234!';
+create database bs_fin_ra_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on bs_fin_ra_db.* to 'bs_fin_ra'@'%' identified by 'Qwer1234!';
+
+create user bs_fin_ocsp@localhost identified by 'Qwer1234!';
+create user bs_fin_ocsp@'%' identified by 'Qwer1234!';
+create database bs_fin_ocsp_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on bs_fin_ocsp_db.* to 'bs_fin_ocsp'@'%' identified by 'Qwer1234!';
+
+FLUSH PRIVILEGES;
+
+
+
+
+
+create user ts_fin_root@localhost identified by 'Qwer1234!';
+create user ts_fin_root@'%' identified by 'Qwer1234!';
+create database ts_fin_root_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on ts_fin_root_db.* to 'ts_fin_root'@'%' identified by 'Qwer1234!';
+
+create user ts_fin_ca@localhost identified by 'Qwer1234!';
+create user ts_fin_ca@'%' identified by 'Qwer1234!';
+create database ts_fin_ca_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on ts_fin_ca_db.* to 'ts_fin_ca'@'%' identified by 'Qwer1234!';
+
+create user ts_fin_ra@localhost identified by 'Qwer1234!';
+create user ts_fin_ra@'%' identified by 'Qwer1234!';
+create database ts_fin_ra_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on ts_fin_ra_db.* to 'ts_fin_ra'@'%' identified by 'Qwer1234!';
+
+create user ts_fin_ocsp@localhost identified by 'Qwer1234!';
+create user ts_fin_ocsp@'%' identified by 'Qwer1234!';
+create database ts_fin_ocsp_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on ts_fin_ocsp_db.* to 'ts_fin_ocsp'@'%' identified by 'Qwer1234!';
+
+FLUSH PRIVILEGES;
+
+
+
+
+
+
+
+
+
+
+
+
+[root@mysqlserver ~]# mysql -u root -p --port=3306
+Enter password: Smgrl123&
+
+mysql -u ts_fin_ra -p ts_fin_ra_db --port 3306 --host 172.20.26.33
+
+mysql -u ts_fin_ra -p ts_fin_ra_db --port 3306 --host 172.20.26.33
+
+
+DROP DATABASE ts_fin_root_db;
+
+DROP DATABASE ts_fin_ca_db;
+
+DROP DATABASE ts_fin_ra_db;
+
+DROP DATABASE ts_fin_ocsp_db;
+
+
+create database ts_fin_root_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on ts_fin_root_db.* to 'ts_fin_root'@'%' identified by 'Qwer1234!';
+
+create database ts_fin_ca_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on ts_fin_ca_db.* to 'ts_fin_ca'@'%' identified by 'Qwer1234!';
+
+create database ts_fin_ra_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on ts_fin_ra_db.* to 'ts_fin_ra'@'%' identified by 'Qwer1234!';
+
+create database ts_fin_ocsp_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on ts_fin_ocsp_db.* to 'ts_fin_ocsp'@'%' identified by 'Qwer1234!';
+
+
+FLUSH PRIVILEGES;
+
+
+mysql -u ts_fin_ca -p ts_fin_ca_db --port 3306 --host 172.20.26.33
+
+
+[root@mysqlserver ~]# mysql -u root -p --port=3306
+Enter password: Smgrl123&
+
+mysql -u cho_ra -p cho_ra_db --port 3306 --host 172.20.26.33
+
+mysql -u cho_ra -p cho_ra_db --port 3306 --host 172.20.26.33
+
+
+DROP DATABASE cho_root_db;
+
+DROP DATABASE cho_ca_db;
+
+DROP DATABASE cho_ra_db;
+
+DROP DATABASE cho_ocsp_db;
+
+
+create database cho_root_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on cho_root_db.* to 'cho_root'@'%' identified by 'Qwer1234!';
+
+create database cho_ca_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on cho_ca_db.* to 'cho_ca'@'%' identified by 'Qwer1234!';
+
+create database cho_ra_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on cho_ra_db.* to 'cho_ra'@'%' identified by 'Qwer1234!';
+
+create database cho_ocsp_db default character set utf8;
+grant  DELETE, INSERT, SELECT, UPDATE, TRIGGER  on cho_ocsp_db.* to 'cho_ocsp'@'%' identified by 'Qwer1234!';
+
+
+FLUSH PRIVILEGES;
+
+
+
+
+
+
+
+
+
+
+
+
+
+SSL TLS 접속 프로토콜 관련
+
+
+MYSQL 5.7
+mysql> select * from performance_schema.session_status where variable_name in ('ssl_version', 'ssl_cipher');
++---------------+----------------+
+| VARIABLE_NAME | VARIABLE_VALUE |
++---------------+----------------+
+| Ssl_cipher    |                |
+| Ssl_version   |                |
++---------------+----------------+
+2 rows in set (0.00 sec)
+
+
+MYSQL 8.0
+mysql> select * from performance_schema.session_status where variable_name in ('ssl_version', 'ssl_cipher');
++---------------+-----------------------------+
+| VARIABLE_NAME | VARIABLE_VALUE              |
++---------------+-----------------------------+
+| Ssl_cipher    | ECDHE-RSA-AES128-GCM-SHA256 |
+| Ssl_version   | TLSv1.2                     |
++---------------+-----------------------------+
+2 rows in set (0.03 sec)
+
+
+접속 시 DISABLE 방법
+mysql -h <호스트 이름> -u <사용자 이름> -p –ssl-mode = DISABLED
+
+
+
+mysql> SHOW VARIABLES LIKE '%ssl%';
++--------------------+-----------------+
+| Variable_name      | Value           |
++--------------------+-----------------+
+| have_openssl       | YES             |
+| have_ssl           | YES             |
+...
+
+mysql> SHOW VARIABLES LIKE '%tls%';
++---------------+---------------+
+| Variable_name | Value         |
++---------------+---------------+
+| tls_version   | TLSv1,TLSv1.1 |
++---------------+---------------+
+
+
+
+mysql -h 127.0.0.1 -u pkg_ca -p
+
+
+mysql -h 127.0.0.1 -u pkg_ca -p --ssl-mode=DISABLED
+
+Ra20191204&
+mysql -u pkg_ca -p pkg_ca_db --port 3306 --host 127.0.0.1 –ssl-mode = DISABLED
+
+
+Ra20191204&
+
+
+
+
+openssl s_client -connect 172.20.25.111:3306 -ssl3
+
+openssl s_client -connect 172.20.25.111:3306 -tls1_2
+
+[safedb@localhost /home/safedb/PKG_CA/tools] $ mysql -h 127.0.0.1 -u pkg_ca -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 80268
+Server version: 8.0.23 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2021, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> select * from performance_schema.session_status where variable_name in ('ssl_version', 'ssl_cipher');
++---------------+-----------------------------+
+| VARIABLE_NAME | VARIABLE_VALUE              |
++---------------+-----------------------------+
+| Ssl_cipher    | ECDHE-RSA-AES128-GCM-SHA256 |
+| Ssl_version   | TLSv1.2                     |
++---------------+-----------------------------+
+2 rows in set (0.01 sec)
+
+mysql> 
+mysql> 
+mysql> quit
+Bye
+[safedb@localhost /home/safedb/PKG_CA/tools] $ mysql -h 127.0.0.1 -u pkg_ca -p --ssl-mode=DISABLED
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 80269
+Server version: 8.0.23 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2021, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> select * from performance_schema.session_status where variable_name in ('ssl_version', 'ssl_cipher');
++---------------+----------------+
+| VARIABLE_NAME | VARIABLE_VALUE |
++---------------+----------------+
+| Ssl_cipher    |                |
+| Ssl_version   |                |
++---------------+----------------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+12:00:00
+
+
+현재 시간에 1초 더하기
+쿼리
+SELECT DATE_ADD(NOW(), INTERVAL 1 SECOND);
+결과
+2018-01-11 12:00:01
+
+
+현재 시간에 1분 더하기
+쿼리
+SELECT DATE_ADD(NOW(), INTERVAL 1 MINUTE);
+결과
+2018-01-11 12:01:00
+
+
+현재 시간에 1시간 더하기
+쿼리
+SELECT DATE_ADD(NOW(), INTERVAL 1 HOUR);
+결과
+2018-01-11 13:00:00
+
+현재 시간에 1일 더하기
+쿼리
+SELECT DATE_ADD(NOW(), INTERVAL 1 DAY);
+결과
+2018-01-12 12:00:00
+
+현재 시간에 1달 더하기
+쿼리
+SELECT DATE_ADD(NOW(), INTERVAL 1 MONTH);
+결과
+2018-02-11 12:00:00
+
+현재 시간에 1년 더하기
+쿼리
+SELECT DATE_ADD(NOW(), INTERVAL 1 YEAR);
+결과
+2019-01-11 12:00:00
+
+현재 시간에 1년 빼기
+쿼리
+SELECT DATE_ADD(NOW(), INTERVAL -1 YEAR);
+결과
+2017-01-11 12:00:00
+
+▶DATE_SUB 예제 쿼리 (Example Query)
+현재 시간
+2018-01-11 12:00:00
+
+현재 시간에 1초 빼기
+쿼리
+SELECT DATE_SUB(NOW(), INTERVAL 1 SECOND);
+결과
+2018-01-11 11:59:59
+
+
+현재 시간에 1분 빼기
+쿼리
+SELECT DATE_SUB(NOW(), INTERVAL 1 MINUTE);
+결과
+2018-01-11 11:59:00
+
+
+현재 시간에 1시간 빼기
+쿼리
+SELECT DATE_SUB(NOW(), INTERVAL 1 HOUR);
+결과
+2018-01-11 11:00:00
+
+현재 시간에 1일 빼기
+쿼리
+SELECT DATE_SUB(NOW(), INTERVAL 1 DAY);
+결과
+2018-01-10 12:00:00
+
+현재 시간에 1달 더하기
+쿼리
+SELECT DATE_SUB(NOW(), INTERVAL 1 MONTH);
+결과
+2017-01-11 12:00:00
+
+현재 시간에 1년 빼기
+쿼리
+SELECT DATE_SUB(NOW(), INTERVAL 1 YEAR);
+결과
+2017-01-11 12:00:00
+
+
+출처: https://extbrain.tistory.com/58 [확장형 뇌 저장소]
+
+
+
+
+
+index 검색 인덱스
+SHOW INDEX FROM CHO_TEST_TBL;
+
+
+
+
+
+
+SHOW FULL PROCESSLIST  ; 로 나온 결과를 가지고
+아래 쿼리에 id 부분만 값을 바꿔주면 가능
+
+<root 필요>
+SELECT esc.THREAD_ID, t.processlist_id, esc.SQL_TEXT 
+FROM 
+performance_schema.events_statements_current esc JOIN performance_schema.threads t ON t.thread_id = esc.thread_id 
+WHERE t.processlist_id = 68508;
+
+
+
+
+
+
+
+딜레이 쿼리,  트렌젝션, 트랜젝션, 트랜잭션
+프로세스 리스트로 한번에 찾아내는 방법
+
+SELECT 
+esc.THREAD_ID TID,   t.processlist_id PID,   esc.SQL_TEXT last_sql, 
+prclist.Time , prclist.HOST client_info
+FROM INFORMATION_SCHEMA.PROCESSLIST prclist,
+performance_schema.events_statements_current esc JOIN performance_schema.threads t ON t.thread_id = esc.thread_id 
+WHERE 
+prclist.USER='cho_ra' 
+AND
+esc.SQL_TEXT NOT IN ('commit', 'rollback')
+AND
+t.processlist_id = prclist.ID;
+
+
+
+
+
+SELECT 
+esc.THREAD_ID TID,   t.processlist_id PID,   esc.SQL_TEXT last_sql, 
+prclist.Time , prclist.HOST client_info
+FROM INFORMATION_SCHEMA.PROCESSLIST prclist,
+performance_schema.events_statements_current esc JOIN performance_schema.threads t ON t.thread_id = esc.thread_id 
+WHERE 
+prclist.USER='cho_ocsp' 
+AND
+esc.SQL_TEXT NOT IN ('commit', 'rollback')
+AND
+t.processlist_id = prclist.ID;
+
+
+
+SELECT 
+esc.THREAD_ID TID,   t.processlist_id PID,   esc.SQL_TEXT last_sql, 
+prclist.Time , prclist.HOST client_info
+FROM INFORMATION_SCHEMA.PROCESSLIST prclist,
+performance_schema.events_statements_current esc JOIN performance_schema.threads t ON t.thread_id = esc.thread_id 
+WHERE 
+prclist.USER='cho_ca' 
+AND
+esc.SQL_TEXT NOT IN ('commit', 'rollback')
+AND
+t.processlist_id = prclist.ID;
+
+
+
+
+SELECT 
+esc.THREAD_ID TID,   t.processlist_id PID,   esc.SQL_TEXT last_sql, 
+prclist.Time , prclist.HOST client_info
+FROM INFORMATION_SCHEMA.PROCESSLIST prclist,
+performance_schema.events_statements_current esc JOIN performance_schema.threads t ON t.thread_id = esc.thread_id 
+WHERE 
+prclist.USER LIKE 'cho_%'
+AND
+t.processlist_id = prclist.ID;
+
+
+SELECT 
+prclist.USER, esc.THREAD_ID TID,   t.processlist_id PID,   esc.SQL_TEXT last_sql, 
+prclist.Time , prclist.HOST client_info
+FROM INFORMATION_SCHEMA.PROCESSLIST prclist,
+performance_schema.events_statements_current esc JOIN performance_schema.threads t ON t.thread_id = esc.thread_id 
+WHERE 
+prclist.USER LIKE 'cho_%'
+AND
+esc.SQL_TEXT NOT IN ('commit', 'rollback')
+AND
+t.processlist_id = prclist.ID;
+
+
+
+CONCAT(DATE_FORMAT(CREATE_DATE,'%Y%m%d'), " : ", COUNT(CREATE_DATE)) AS YYMMDD_CNT
+
+select count(*) from OCSP_REQUESTS WHERE DATE_FORMAT(CREATE_DATE,'%Y%m%d') = '20211201';
+
+
+날짜별 count
+
+SELECT 
+	DATE_FORMAT(CREATE_DATE,'%Y%m%d') as day,
+	COUNT(CREATE_DATE) as cnt
+FROM 
+	OCSP_REQUESTS 
+WHERE 
+	DATE(CREATE_DATE) BETWEEN '2021-01-01' AND '2021-12-31'
+GROUP BY DATE_FORMAT(CREATE_DATE,'%Y%m%d');
+
+
+SELECT 
+	CONCAT(DATE(CREATE_DATE), " : ddd") AS YYMMDD_CNT
+FROM 
+	OCSP_REQUESTS 
+WHERE 
+	DATE(CREATE_DATE) BETWEEN '2021-01-01' AND '2021-12-31'
+GROUP BY DATE_FORMAT(CREATE_DATE,'%Y%m%d');
+
+
