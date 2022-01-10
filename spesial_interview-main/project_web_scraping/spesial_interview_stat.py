@@ -1,12 +1,3 @@
-import time
-import pymysql
-import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib
-
-matplotlib.rcParams['font.family'] = 'Malgun Gothic' # Windows
-matplotlib.rcParams['font.size'] = 15 # 글자 크기
-matplotlib.rcParams['axes.unicode_minus'] = False # 한글 폰트 사용 시, 마이너스 글자가 깨지는 현상을 해결
 
 # DB 생성정보
 # create user cho@localhost identified by 'Qwer1234!';
@@ -30,6 +21,17 @@ matplotlib.rcParams['axes.unicode_minus'] = False # 한글 폰트 사용 시, �
 
 # ALTER TABLE spesial_interview_stat_tb ADD INDEX IDX_s_i_stat_tb_1(create_date ASC);
 # ALTER TABLE spesial_interview_stat_tb ADD INDEX IDX_s_i_stat_tb_2(subject ASC);
+
+
+import time
+import pymysql
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib
+
+matplotlib.rcParams['font.family'] = 'Malgun Gothic' # Windows
+matplotlib.rcParams['font.size'] = 15 # 글자 크기
+matplotlib.rcParams['axes.unicode_minus'] = False # 한글 폰트 사용 시, 마이너스 글자가 깨지는 현상을 해결
 
 
 global mydb
@@ -68,11 +70,7 @@ def select_stat_info():
     return rows
 
 
-if __name__ == "__main__":
-    connect_stat_db()
-
-    try:
-        while True:
+def stat_chart_update():
             stat_rows=select_stat_info()
             seqnum=[stat_row[0] for stat_row in stat_rows]
             credate=[stat_row[1] for stat_row in stat_rows]
@@ -98,47 +96,54 @@ if __name__ == "__main__":
 
             #조건 선택
             result = df[['credate', 'view_counts']]
-            print(result)
             result_fin = result.groupby('credate').sum()
             groupKeys = result['credate'].unique()
-            for sumVal in result_fin:
-                print(sumVal)
-            groupSums = [sumVal for sumVal in result_fin]
+            view_counts = [ view_count for view_count in result_fin['view_counts']]
+
+            print(result_fin)
+            print(view_counts)
+
+            # X 축
+            view_counts_len = len(view_counts)
+            view_count_range=range(view_counts_len-2) # 첫번쨰 시작과, 마지막은 제외
+            x_min = 0
+            x_max = view_counts_len
+
+            # Y 축            
+            view_count_list=[]
+            for idx in range(view_counts_len-1):
+                if idx == 0:
+                    continue
+                print( idx, view_counts[idx], view_counts[idx-1])
+                view_count_list.append(view_counts[idx]-view_counts[idx-1])
+            y_min = min(view_count_list) - 50 # 표 여유를 위해 축 표시 보정
+            y_max = max(view_count_list) + 50 # 표 여유를 위해 축 표시 보정
+            
+            # 표 그리기
+            plt.style.use('seaborn')
+            plt.figure(figsize=(16, 8)) # 그래프 크기
+            plt.xlabel('TIME ---->', color='red', loc='right') # left, center, right 
+            plt.ylabel('VIEW COUNT', color='#00aa00', loc='top') # top, center, bottom            
+            plt.title('spesial_interview') # 그래프 제목
+            plt.xlim([x_min, x_max])
+            plt.ylim([y_min, y_max])
+            plt.plot(view_count_range, view_count_list, 'g', linestyle='--', linewidth=1, marker='o', markersize=3, markerfacecolor='red')
+            plt.show()
+
+            time.sleep(10)
+
+
+
+if __name__ == "__main__":
+    connect_stat_db()
+
+    try:
+        while True:
+            stat_chart_update()
             
 
-            
-            
-            print(groupKeys)
-            print(groupSums)
-
-
-
-
-
-            # print(result.groupby('credate').count)
-
-            # plt.plot(result_fin)
-            # plt.show()
-
-            # df['credate'] = df['credate'].str.slice(start=6, stop=11)
-            # result = df[['credate', 'view_counts']]
-            # result_fin=result.groupby('credate')['view_counts'].sum()
-            # result_fin=result.groupby('credate').sum()
-            # print(result_fin['view_counts'])
-            # plt.plot(result_fin['credate'], result_fin['view_counts'])
-            # plt.plot(result_fin)
-            # plt.show()
-
-            # filt = (df['subjects'] == '105')
-            # result=df.loc[(df['subjects'] == '105'), ['credate','view_counts']]
-            # result['credate'] = result['credate'].str.slice(start=6, stop=11)
-            # plt.plot(result['credate'], result['view_counts'])
-            # plt.show()
-
-            time.sleep(1000)
-
-    except:
-        disconnect_stat_db()
+    except Exception as err:
+        print(err)
 
 
 

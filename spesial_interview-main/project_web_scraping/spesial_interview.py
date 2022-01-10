@@ -8,9 +8,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
-# from gtts import gTTS
-# import vlc
-# from mutagen.mp3 import MP3
+from gtts import gTTS
+import vlc
+from mutagen.mp3 import MP3
 import pymysql
 import datetime
 
@@ -135,17 +135,16 @@ def insert_curr_stat_info(stat_in_db):
 
 
 def text_to_speech(input_text):
-    pass
-    # checkval=len(input_text)
-    # gSound = gTTS( input_text, lang='ko', slow=False)
-    # gSound.save('inputtext.mp3')
-    # media_player = vlc.MediaPlayer()
-    # media=vlc.Media('inputtext.mp3')
-    # audio = MP3("inputtext.mp3")
-    # play_time = audio.info.length
-    # media_player.set_media(media)
-    # media_player.play()
-    # time.sleep(play_time)
+    checkval=len(input_text)
+    gSound = gTTS( input_text, lang='ko', slow=False)
+    gSound.save('inputtext.mp3')
+    media_player = vlc.MediaPlayer()
+    media=vlc.Media('inputtext.mp3')
+    audio = MP3("inputtext.mp3")
+    play_time = audio.info.length
+    media_player.set_media(media)
+    media_player.play()
+    time.sleep(play_time)
 
 
 def check_change_info(old_total, new_total):
@@ -243,7 +242,7 @@ def scrape_special_interview():
     browser.get(url) # url 로 이동
     browser.find_element(By.XPATH, "//*[@id='volume1']/a").click()
 
-    with open('C:/PythonWorkSpace/spesial_interview/spesial_interview_old.pickle', 'rb') as rf:
+    with open('C:/PythonWorkSpace/project_web_scraping/spesial_interview_old.pickle', 'rb') as rf:
         old_total_info = pickle.load(rf)
 
     total_info=[] # 전체 정보를 저장할 변수
@@ -281,7 +280,7 @@ def scrape_special_interview():
             if stop_subject == subject:
                 print('마지막화 입니다. 종료합니다.')
                 
-                with open('C:/PythonWorkSpace/spesial_interview/spesial_interview_old.pickle', 'wb') as fw:
+                with open('C:/PythonWorkSpace/project_web_scraping/spesial_interview_old.pickle', 'wb') as fw:
                     pickle.dump(total_info, fw)
                 break
 
