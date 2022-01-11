@@ -8,9 +8,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
-from gtts import gTTS
-import vlc
-from mutagen.mp3 import MP3
+# from gtts import gTTS
+# import vlc
+# from mutagen.mp3 import MP3
 import pymysql
 import datetime
 
@@ -135,16 +135,17 @@ def insert_curr_stat_info(stat_in_db):
 
 
 def text_to_speech(input_text):
-    checkval=len(input_text)
-    gSound = gTTS( input_text, lang='ko', slow=False)
-    gSound.save('inputtext.mp3')
-    media_player = vlc.MediaPlayer()
-    media=vlc.Media('inputtext.mp3')
-    audio = MP3("inputtext.mp3")
-    play_time = audio.info.length
-    media_player.set_media(media)
-    media_player.play()
-    time.sleep(play_time)
+    pass
+    # checkval=len(input_text)
+    # gSound = gTTS( input_text, lang='ko', slow=False)
+    # gSound.save('inputtext.mp3')
+    # media_player = vlc.MediaPlayer()
+    # media=vlc.Media('inputtext.mp3')
+    # audio = MP3("inputtext.mp3")
+    # play_time = audio.info.length
+    # media_player.set_media(media)
+    # media_player.play()
+    # time.sleep(play_time)
 
 
 def check_change_info(old_total, new_total):
@@ -307,6 +308,3 @@ if __name__ == "__main__":
     except Exception as err:
         print(err)
         disconnect_stat_db()
-
-
-
