@@ -44,6 +44,7 @@ global mycursor
 global browser
 global view_count_list
 global currdate
+global novel_url_list
 
 
 def connect_stat_db():
@@ -74,6 +75,9 @@ def clear_webdriver():
 def scrape_special_interview_view_count():
     global browser
     global view_count_list
+    global novel_url_list
+
+    novel_url_list=[]
 
     view_count_list=[]
     base_url = "https://novel.naver.com/best/list?novelId=1019899&order=Oldest&page="
@@ -99,6 +103,9 @@ def scrape_special_interview_view_count():
             view_count=novel_list_element.find_all("span", attrs={"class":"count"})[1].get_text().split(' ')[1].replace(',','').replace('만','0000')
             view_count_list.append(view_count)
 
+            novel_url=novel_list_element.find("a", attrs={"class":"list_item NPI=a:list"})["href"]
+            print("https://novel.naver.com"+novel_url)
+            novel_url_list.append("https://novel.naver.com"+novel_url)
         
         nest_page_index=soup.find("div", attrs={"class":"paging NE=a:lst"}).find("a", text=str(page_index+1))
 
@@ -135,16 +142,17 @@ def insert_curr_stat_info(stat_in_db):
 
 
 def text_to_speech(input_text):
-    checkval=len(input_text)
-    gSound = gTTS( input_text, lang='ko', slow=False)
-    gSound.save('inputtext.mp3')
-    media_player = vlc.MediaPlayer()
-    media=vlc.Media('inputtext.mp3')
-    audio = MP3("inputtext.mp3")
-    play_time = audio.info.length
-    media_player.set_media(media)
-    media_player.play()
-    time.sleep(play_time)
+    pass
+    # checkval=len(input_text)
+    # gSound = gTTS( input_text, lang='ko', slow=False)
+    # gSound.save('inputtext.mp3')
+    # media_player = vlc.MediaPlayer()
+    # media=vlc.Media('inputtext.mp3')
+    # audio = MP3("inputtext.mp3")
+    # play_time = audio.info.length
+    # media_player.set_media(media)
+    # media_player.play()
+    # time.sleep(play_time)
 
 
 def check_change_info(old_total, new_total):
@@ -238,9 +246,7 @@ def scrape_special_interview():
     stop_subject = stop_subject[:stop_subject.find('\n')]
 
 
-    #시작 URL로 변경
-    browser.get(url) # url 로 이동
-    browser.find_element(By.XPATH, "//*[@id='volume1']/a").click()
+
 
     with open('C:/PythonWorkSpace/spesial_interview/project_web_scraping/spesial_interview_old.pickle', 'rb') as rf:
         old_total_info = pickle.load(rf)
@@ -251,7 +257,13 @@ def scrape_special_interview():
 
     while True:
         try:
-            time.sleep(5)
+            #시작 URL로 변경
+            # browser.get(url) # url 로 이동
+            # browser.find_element(By.XPATH, "//*[@id='volume1']/a").click()
+
+            browser.get(novel_url_list[check_index])
+
+            time.sleep(3)
             subject = browser.find_element(By.XPATH, "//*[@id='content']/div[1]/div[2]/h2").text
             subject = subject[:subject.find('\n')]
             score_average = browser.find_element(By.XPATH, "//*[@id='currentStarScore']").text
@@ -270,7 +282,7 @@ def scrape_special_interview():
             single_info=[subject, score_average, score_count, heart_count, view_count, comment_info]
             total_info.append(single_info)
 
-            print(f'{subject}  검사를 시작합니다.')
+            # print(f'{subject}  검사를 시작합니다.')
 
             if check_index < len(old_total_info):
                 check_change_info(old_total_info[check_index], single_info)
@@ -286,14 +298,14 @@ def scrape_special_interview():
                     pickle.dump(total_info, fw)
                 break
 
-            next_part = browser.find_element(By.XPATH, "//*[@id='nextVolumeBtn']")
+            # next_part = browser.find_element(By.XPATH, "//*[@id='nextVolumeBtn']")
 
-            while not  next_part:
-                next_part = browser.find_element(By.XPATH, "//*[@id='nextVolumeBtn']")
-                print('다음화 버튼을 기다립니다.')
-                time.sleep(1)
+            # while not  next_part:
+            #     next_part = browser.find_element(By.XPATH, "//*[@id='nextVolumeBtn']")
+            #     print('다음화 버튼을 기다립니다.')
+            #     time.sleep(1)
 
-            next_part.click()
+            # next_part.click()
 
         except Exception as err:
             print(err)
