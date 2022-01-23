@@ -29,11 +29,11 @@ def select_stat_info():
 
     sql = "SELECT 	\
                 num, \
-                DATE_FORMAT(create_date,'%Y%m%d%H') as hh,	\
+                DATE_FORMAT(create_date,'%Y%m%d%H%i') as hh,	\
                 subject,	\
                 SUM(view_count) as view_count \
             FROM 	\
-                spesial_interview_tb \
+                spesial_interview_stat_tb \
             WHERE 	\
                 create_date >= '2022-01-01 00:00:00' \
             AND \
@@ -62,7 +62,7 @@ def stat_chart_update():
             view_counts.reverse()
 
             # 최대 몇건까지 보여줄지 정의
-            view_limit =-60
+            view_limit =-30
             credate=credate[view_limit:]
             view_counts=view_counts[view_limit:]
 
@@ -74,7 +74,7 @@ def stat_chart_update():
                     check_day_str=groupKey[4:8]
                     fin_x_list.append(groupKey[4:6] + " / " + groupKey[6:8])
                 else:
-                    fin_x_list.append(groupKey[6:8] + "  " + groupKey[8:10] + ":00")
+                    fin_x_list.append(groupKey[6:8] + "  " + groupKey[8:10] + ":" + groupKey[10:12])
 
 
             # x축 재정의
@@ -93,7 +93,7 @@ def stat_chart_update():
             plt.ylabel('VIEW COUNT', color='#00aa00', loc='top') # top, center, bottom            
             plt.title('spesial_interview') # 그래프 제목
             plt.ylim([y_min, y_max])
-            plt.xticks(rotation=90)
+            plt.xticks(rotation=-90)
             plt.plot(fin_x_list, fin_y_list, 'g', linestyle='--', linewidth=1, marker='o', markersize=3, markerfacecolor='red')
             plt.show(block=False)
             plt.pause(180)
